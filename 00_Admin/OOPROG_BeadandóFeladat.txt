@@ -1,0 +1,11 @@
+Kedves Hallgató!
+
+Objektumorientált programozásból neked az A típusú feladatot kell megoldanod. Kérlek olvasd el annak leírását és az abban foglaltak szerint valósítsd meg és add be hatádidőn belül a feladatot és a hozzá tartozó kisvideót.
+Az elkészült alkalmazást és kisvideót a saját github repozitory-dba egy publikus vagy velem megosztott (@hipszkij) repóba töltsd fel. A repository linkjét másold be egy txt, docx bármilyen dokumetum fájlba majd azt töltsd fel a neptunban erre a célra beállított feladathoz.
+
+Ha valaki hamarabb készvan és beküldi annak csak örülök, eloszlik a rámeső terhelés. Emailt nem szükséges írni a beadásról, látom a feladatoknál ki az aki feltöltötte napi szinten ellenőrzöm.
+ 
+Következő órán ZH után akinek van kérdése maradhat és lehetőség lesz kérdezni, konzultációt tartunk!
+ 
+Üdv.
+Hipszki János - oktató
