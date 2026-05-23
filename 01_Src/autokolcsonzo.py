@@ -4,7 +4,7 @@ Objektum-orientált programozás, A feladat]
 - **Autokolcsonzo:** Tartalmazza az autókat és saját attribútumot is, például a kölcsönző nevét.
 '''
 
-import auto, berles, szemelyauto, teherauto
+from berles import Berles
 
 class Autokolcsonzo(object):
 
@@ -76,7 +76,7 @@ class Autokolcsonzo(object):
          
 #Lekérdezi, hogy az adott dátumra már ki van-e bérelve az autó
     #TODO: dátumvalidáció
-    def berelveVan(self, rendszamIn, datumIn):
+    def berelveVan(self, rendszamIn, datumIn) -> bool:
         try:
             next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn)
             return True
@@ -86,15 +86,14 @@ class Autokolcsonzo(object):
             
 #Új bérlés rögzítése
     #TODO: dátumvalidáció
-    def ujBerles(self, rendszamIn, datumIn):
+    def ujBerles(self, rendszamIn, datumIn) -> str:
         try:
             berlendoAuto = self.rendszamKeres(rendszamIn)
             if (self.berelveVan(rendszamIn, datumIn)):
                return "Az autó már ki van bérelve az adott napra." 
             else:
-                self.berlesek += berles(rendszamIn, datumIn)
                 if(input("Napi bérleti díj: " + str(berlendoAuto.berletiDij) + ". Rögzítsük a bérlést?[I/N]").upper() == "I"):
-                    self._berlesek.append(berles(rendszamIn, datumIn))
+                    self._berlesek.append(Berles(rendszamIn, datumIn))
                     return "A(z) " + rendszamIn + " rendszámú, " + berlendoAuto.tipus + " típusú autó bérlése " + str(datumIn) + " dátumra rögzítve."    
                 else:
                     return("A foglalás nincs rögzítve.")
@@ -105,12 +104,21 @@ class Autokolcsonzo(object):
         
 #Bérlés lemondása
     #TODO: dátumvalidáció
-    def berlesLemondas(self, rendszamIn, datumIn):
+    def berlesLemondas(self, rendszamIn, datumIn) -> str:
         try:
             self.rendszamKeres(rendszamIn)
             if (self.berelveVan(rendszamIn, datumIn)):
-               return "Az autó már ki van bérelve az adott napra." 
+                self._berlesek.remove(next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn))
+                return "A(z) " + rendszamIn + " rendszámú autó bérlése " + str(datumIn) + " dátumról törölve."    
             else:
-                return "A(z) " + rendszamIn + "rendszámú autó a nyilvántartás szerint nincs kibérelve a " + str(datumIn) + "napra."
+                return("Nem található bérlés a(z) " + rendszamIn + " rendszámú autóra " + datumIn + " dátumra.")
         except:
             return "A(z) " + rendszamIn + "rendszámú autó nem található a nyilvántartásban."
+        
+        
+#Bérlések listázása
+    def berlesekLista(self) -> str:
+        eredmeny = ""
+        for aktBerles in self._berlesek:
+            eredmeny += "Rendszám: " + aktBerles.rendszam + "\t Bérlés kezdete: " + str(aktBerles.kezdesDatum) + ", vége: " + str(aktBerles.vegDatum) + "\n"
+        return eredmeny

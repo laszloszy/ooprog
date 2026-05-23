@@ -4,11 +4,11 @@ Objektum-orientált programozás, A feladat]
 - **Berles:** Az autóbérléshez szükséges osztály, amely egy autó bérlését egy napra tárolja.
 '''
 
-from datetime import date
+from datetime import date, timedelta
 from typing import Final
 
 class Berles(object):
-    BERLES_HOSSZ = Final[date.day] = 1 #Az alapértelmezett bérléshossz (nap)
+    BERLES_HOSSZ: Final = 1 #Az alapértelmezett bérléshossz (nap)
     
     #Konstruktor
     def  __init__(self, bereltAutoRendszam="", kezdesDatum="N/A", vegDatum="N/A"):
@@ -23,7 +23,7 @@ class Berles(object):
             if (vegDatum != "N/A"):
                 self._vegDatum = vegDatum
             else:
-                self._vegDatum = self._kezdesDatum + Berles.BERLES_HOSSZ
+                self._vegDatum = self._kezdesDatum + timedelta(days=Berles.BERLES_HOSSZ)
         else:
             raise ValueError("Hiányzik a bérlendő autó rendszáma")                        
 
@@ -32,7 +32,7 @@ class Berles(object):
         
     #Bérelt autó rendszáma
     @property
-    def rendszam(self):
+    def rendszam(self) -> str:
         return self._rendszam
     
     @rendszam.setter
@@ -42,7 +42,7 @@ class Berles(object):
         
     #Bérlés dátumai
     @property
-    def kezdesDatum(self):
+    def kezdesDatum(self) -> date:
         return self._kezdesDatum
     
     @kezdesDatum.setter
@@ -50,7 +50,7 @@ class Berles(object):
         self._kezdesDatum = kezdesIn
     
     @property
-    def vegDatum(self):
+    def vegDatum(self) -> date:
         return self._kezdesDatum
     
     @vegDatum.setter
@@ -60,5 +60,5 @@ class Berles(object):
         
 #----------Metódusok----------        
         
-    def lejartE(self):
+    def lejartE(self) -> bool:
         return self._vegDatum < date.today()

@@ -17,13 +17,13 @@ class Auto(ABC):
     
     @rendszam.setter
     @abstractmethod
-    def rendszam(self, rendszamIn):
+    def rendszam(self, rendszamIn) -> str:
         ...
     
     #Típus
     @property
     @abstractmethod
-    def tipus(self):
+    def tipus(self) -> str:
         ...
     
     @tipus.setter
@@ -34,7 +34,7 @@ class Auto(ABC):
     #Bérleti díj 
     @property
     @abstractmethod
-    def berletiDij(self):
+    def berletiDij(self) -> str:
         ...
     
     @berletiDij.setter

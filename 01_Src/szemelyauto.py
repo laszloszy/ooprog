@@ -20,7 +20,7 @@ class Szemelyauto(auto.Auto):
                
    #Rendszám
     @property
-    def rendszam(self):
+    def rendszam(self) -> str:
         return self._rendszam
     
     @rendszam.setter
@@ -29,7 +29,7 @@ class Szemelyauto(auto.Auto):
     
     #Típus
     @property
-    def tipus(self):
+    def tipus(self) -> str:
         return self._tipus
     
     @tipus.setter
@@ -38,7 +38,7 @@ class Szemelyauto(auto.Auto):
     
     #Bérleti díj 
     @property
-    def berletiDij(self):
+    def berletiDij(self) -> str:
         return self._berletiDij
     
     @berletiDij.setter
