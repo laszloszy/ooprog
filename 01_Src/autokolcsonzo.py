@@ -124,14 +124,15 @@ class Autokolcsonzo(object):
 #Bérlés lemondása
     def berlesLemondas(self, rendszamIn, datumIn) -> str:
         try:
-            self.rendszamKeres(rendszamIn)
-            if (self.berelveVan(rendszamIn, datumIn)):
-                self._berlesek.remove(next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn))
-                return "A(z) " + rendszamIn + " rendszámú autó bérlése " + str(datumIn) + " dátumról törölve."    
-            else:
-                return("Nem található bérlés a(z) " + rendszamIn + " rendszámú autóra " + datumIn + " dátumra.")
+            self.rendszamKeres(rendszamIn)            
         except:
             return "A(z) " + rendszamIn + "rendszámú autó nem található a nyilvántartásban."
+        
+        if (self.berelveVan(rendszamIn, datumIn)):
+                self._berlesek.remove(next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn))
+                return "A(z) " + rendszamIn + " rendszámú autó bérlése " + str(datumIn) + " dátumról törölve."    
+        else:
+            return("Nem található bérlés a(z) " + rendszamIn + " rendszámú autóra " + str(datumIn) + " dátumra.")
         
         
 #Bérlések listázása
