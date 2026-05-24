@@ -5,6 +5,7 @@ Objektum-orientált programozás, A feladat]
 '''
 
 from berles import Berles
+from datetime import date
 
 class Autokolcsonzo(object):
 
@@ -54,28 +55,44 @@ class Autokolcsonzo(object):
     
 #Visszaadja a rendszámhoz tartozó autót, vagy StopIteration kivételt dob, ha nem található
     def rendszamKeres(self, rendszamIn):
-        return next(x for x in self.autok if x.rendszam == rendszamIn) 
+        return next(x for x in self.autok if x.rendszam == rendszamIn)     
     
     
-#Visszaadja az első szabad autót, aminek a típusa a keresettvagy StopIteration kivételt dob, ha nem található
-    def szabadKeres(self, tipusIn="N/A", berletiDijMax=0):
+#Visszaadja az első szabad autót, aminek a típusa a keresett, vagy StopIteration kivételt dob, ha nem található
+    def tipusKeres(self, tipusIn="N/A", berletiDijMax=0, datumIn=""):
         
         if (tipusIn != "N/A"):
             if (berletiDijMax == 0): #Keresés csak típus alapján
-                return next(x for x in self._autok if x.tipus == tipusIn) 
+                return next(x for x in self._autok if x.tipus == tipusIn and not self.berelveVan(x.rendszam, datumIn)) 
             
             else: #Keresés típus és max. bérleti díj alapján
-                return next(x for x in self._autok if (x.tipus == tipusIn and x.berletiDij <= berletiDijMax)) 
+                return next(x for x in self._autok if (x.tipus == tipusIn and x.berletiDij <= berletiDijMax and not self.berelveVan(x.rendszam, datumIn))) 
             
         elif (berletiDijMax > 0): #Keresés csak max. bérleti díj alapján
-            return next(x for x in self._autok if x.berletiDij <= berletiDijMax)
+            return next(x for x in self._autok if x.berletiDij <= berletiDijMax and not self.berelveVan(x.rendszam, datumIn))
         
         else:
              raise ValueError("Kérem, adjon meg típust, maximális bérleti díjat vagy mindkettőt!")             
          
          
+#Visszaadja az első szabad autót, aminek a kategóriája a keresett, vagy StopIteration kivételt dob, ha nem található
+    def kategoriaKeres(self, kategoriaIn="N/A", berletiDijMax=0, datumIn=""):
+        
+        if (kategoriaIn != "N/A"):
+            if (berletiDijMax == 0): #Keresés csak típus alapján
+                return next(x for x in self._autok if isinstance(x, kategoriaIn) and not self.berelveVan(x.rendszam, datumIn)) 
+            
+            else: #Keresés típus és max. bérleti díj alapján
+                return next(x for x in self._autok if (isinstance(x, kategoriaIn) and x.berletiDij <= berletiDijMax and not self.berelveVan(x.rendszam, datumIn))) 
+            
+        elif (berletiDijMax > 0): #Keresés csak max. bérleti díj alapján
+            return next(x for x in self._autok if x.berletiDij <= berletiDijMax and not self.berelveVan(x.rendszam, datumIn))
+        
+        else:
+             raise ValueError("Kérem, adjon meg kategóriát, maximális bérleti díjat vagy mindkettőt!")     
+    
+                 
 #Lekérdezi, hogy az adott dátumra már ki van-e bérelve az autó
-    #TODO: dátumvalidáció
     def berelveVan(self, rendszamIn, datumIn) -> bool:
         try:
             next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn)
@@ -85,8 +102,10 @@ class Autokolcsonzo(object):
             
             
 #Új bérlés rögzítése
-    #TODO: dátumvalidáció
     def ujBerles(self, rendszamIn, datumIn) -> str:
+        if (datumIn < date.today()):
+            return "Múltbeli dátumra nem lehetséges foglalást rögzíteni."
+        
         try:
             berlendoAuto = self.rendszamKeres(rendszamIn)
             if (self.berelveVan(rendszamIn, datumIn)):
@@ -103,7 +122,6 @@ class Autokolcsonzo(object):
         
         
 #Bérlés lemondása
-    #TODO: dátumvalidáció
     def berlesLemondas(self, rendszamIn, datumIn) -> str:
         try:
             self.rendszamKeres(rendszamIn)

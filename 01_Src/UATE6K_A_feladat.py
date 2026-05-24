@@ -18,47 +18,93 @@ kolcsonzo = autokolcsonzo.Autokolcsonzo("Badzsit Autókölcsönző")
 
 #Az alkalmazás főmenüje
 def menu():
-    while True:
-        print("[" + kolcsonzo.nev + " - Autókölcsönző nyilvántartás]")
-        print("\n\t1 - Autó bérlése")
-        print("\t2 - Bérlés lemondása")
-        print("\t3 - Bérlések listázása")
-        print("\t0 - Kilépés")
+    while True:        
+        print("\n\n\t\t\t[" + kolcsonzo.nev + " - Autókölcsönző nyilvántartás]")
+        print("\n1 - Autó bérlése")
+        print("2 - Bérlés lemondása")
+        print("3 - Bérlések listázása")
+        print("X - Kilépés")
 
-        choice = int(input("Kérem, válasszon műveletet: ").strip())
+        choice = input("Kérem, válasszon műveletet: ").strip().upper()
 
         match choice:
-            case 0: #Kilépés
-                print("Kilépés.")
-                exit()
-                break
-            case 1: #Autó bérlése
-                choiceRent = input("Rendszám, kategória vagy típus alapján válasszunk autót? [R, K vagy T, vissza: X]:").upper()
+                        
+            case '1': #Autó bérlése
+                choiceRent = input("\nRendszám, kategória vagy típus alapján válasszunk autót? [R, K vagy T, visszalépés: X]:").upper()
+                
                 match choiceRent:
+                    
                     case "R": #Rendszámszerinti keresés
                         rendszamIn = input("Rendszám: ")
                         datumIn = input("Dátum (éééé-hh-nn): ")
                         try:
                             datumIn = datetime.strptime(datumIn, "%Y-%m-%d").date()
-                            print(kolcsonzo.ujBerles(rendszamIn, datumIn))
                         except(ValueError):
                             print("Hibás dátum! Kérem, használja a következő formátumot: éééé-hh-nn")
                             continue    
+                        
+                        print(kolcsonzo.ujBerles(rendszamIn, datumIn))
                         break
-                    case "K":
-                        #TODO: kategóriaszerinti keresés
+                    
+                    case "K": #Kategóriaszerinti bérlés
+                        print("Kategória: \n\t1 - Személyautó \n\t2 - Teherautó \n\tX - Visszalépés")
+                        kategoriaValIn = input("Kérem, válasszon kategóriát:").upper()
+                        kategoriaIn = ""
+                        
+                        match kategoriaValIn:
+                            case '1': #Személyautó
+                                kategoriaIn = Szemelyauto
+                            case '2': #Teherautó
+                                kategoriaIn = Teherauto
+                            case 'X': #Visszalépés
+                                break
+                            case _: #Default
+                                print("Kérem, válasszon a fenti lehetőségek közül.")
+                                continue
+                                
+                        datumIn = input("\tDátum (éééé-hh-nn): ")
+                        
+                        try:
+                            datumIn = datetime.strptime(datumIn, "%Y-%m-%d").date()                            
+                        except(ValueError):
+                            print("Hibás dátum! Kérem, használja a következő formátumot: éééé-hh-nn")
+                            continue    
+                        
+                        try:
+                            berlendoAuto = kolcsonzo.kategoriaKeres(kategoriaIn, 0, datumIn)
+                            print(kolcsonzo.ujBerles(berlendoAuto.rendszam, datumIn))
+                        except:
+                            print(str(datumIn) +" dátumon nincs szabad " + kategoriaValIn + " típusú autó.")
+                            continue
                         break
-                    case "T":
-                        #TODO: típusszerinti keresés
+                    
+                    case "T": #Típusszerinti bérlés                     
+                        tipusIn = input("\tTípus: ")
+                        datumIn = input("\tDátum (éééé-hh-nn): ")
+                        try:
+                            datumIn = datetime.strptime(datumIn, "%Y-%m-%d").date()                            
+                        except(ValueError):
+                            print("Hibás dátum! Kérem, használja a következő formátumot: éééé-hh-nn")
+                            continue    
+                        
+                        try:
+                            berlendoAuto = kolcsonzo.tipusKeres(tipusIn, 0, datumIn)
+                            print(kolcsonzo.ujBerles(berlendoAuto.rendszam, datumIn))
+                        except:
+                            print(str(datumIn) +" dátumon nincs szabad " + tipusIn + " típusú autó.")
+                            continue
                         break
-                    case "X": #Kilépés
+                    
+                    case "X": #Visszalépés
                         break
-                    case _:
-                        print("Kérem, válasszon a fenti lehetőségek közül!")
+                    
+                    case _: #Default
+                        print("\tKérem, válasszon a fenti lehetőségek közül!")
                         continue
-            case 2: #Bérlés lemondása
-                rendszamIn = input("Rendszám: ")
-                datumIn = input("Dátum (éééé-hh-nn): ")
+                    
+            case '2': #Bérlés lemondása
+                rendszamIn = input("\tRendszám: ")
+                datumIn = input("\tDátum (éééé-hh-nn): ")
                 try:
                     datumIn = datetime.strptime(datumIn, "%Y-%m-%d").date()
                     print(kolcsonzo.berlesLemondas(rendszamIn, datumIn))
@@ -66,11 +112,18 @@ def menu():
                     print("Hibás dátum! Kérem, használja a következő formátumot: éééé-hh-nn")
                     continue    
                 break
-            case 3: #Bérlések listázása
+            
+            case '3': #Bérlések listázása
                 print(kolcsonzo.berlesekLista())
                 break
+            
+            case 'X': #Kilépés
+                print("Kilépés.")
+                exit()
+                break
+
             case _: #Default
-                print("Kérem, válasszon a fenti lehetőségek közül!")
+                print("\tKérem, válasszon a fenti lehetőségek közül!")
                 continue
     menu()
 
