@@ -125,8 +125,8 @@ class Autokolcsonzo(object):
     def berlesLemondas(self, rendszamIn, datumIn) -> str:
         try:
             self.rendszamKeres(rendszamIn)            
-        except:
-            return "A(z) " + rendszamIn + "rendszámú autó nem található a nyilvántartásban."
+        except(StopIteration):
+            return "A(z) " + rendszamIn + " rendszámú autó nem található a nyilvántartásban."
         
         if (self.berelveVan(rendszamIn, datumIn)):
                 self._berlesek.remove(next(x for x in self._berlesek if x.rendszam == rendszamIn and x.kezdesDatum <= datumIn and x.vegDatum >= datumIn))
